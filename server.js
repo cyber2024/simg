@@ -1,6 +1,7 @@
 var baseurl = 'https://www.googleapis.com/customsearch/v1?searchType=image&key=AIzaSyBmaya_Wvc97y9ITxYDBQFAr4iDpajLalc&cx=017719827028415753576%3Akitp2a1bflq&num=5';
 var offset = '&start=1';
 var cx = '&cx=017719827028415753576%3Akitp2a1bflq';
+var resultsPerPage=5;
 
 var express = require("express");
 var app = express();
@@ -23,7 +24,7 @@ function search(q, offset, callback){
      return https.get({
          protocol: 'https:',
         host: 'www.googleapis.com',
-        path: '/customsearch/v1?searchType=image&key=AIzaSyBmaya_Wvc97y9ITxYDBQFAr4iDpajLalc&cx=017719827028415753576%3Akitp2a1bflq&num=5'+q+offset
+        path: '/customsearch/v1?searchType=image&key=AIzaSyBmaya_Wvc97y9ITxYDBQFAr4iDpajLalc&cx=017719827028415753576%3Akitp2a1bflq&num='+resultsPerPage+q+offset
     }, function(response) {
         // Continuously update stream with data
         var body = '';
@@ -70,7 +71,7 @@ app.get('/search/:searchstring', function(req,res){
     var q = '';
     var offset = '';
     if(req.query.offset)
-        offset = '&start='+req.query.offset; 
+        offset = '&start='+((req.query.offset-1) * resultsPerPage); 
     if(req.params.searchstring)
         q = '&q='+req.params.searchstring.replace(/\s/,'%20');
     
